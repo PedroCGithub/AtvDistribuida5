@@ -93,9 +93,8 @@ int main(int argc, char *argv[]) {
 
     // Apenas o processo root (0) imprime o vetor final
     if (rank == 0) {
-        printf("\n[Processo %d] Vetor original: %p\n", rank, data);
-        printf("[Processo %d] Vetor transformado: %p\n", rank, resultado);
-
+        printf("\n[Processo %d] Vetor original: %d\n", rank, *data);
+        printf("[Processo %d] Vetor transformado: %d\n", rank, *resultado);
         free(data);
     }
    
