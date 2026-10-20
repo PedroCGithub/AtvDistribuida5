@@ -36,7 +36,7 @@ ightarrow x^2 \)
 #include <mpi.h>
 
 #define processadores_num 5
-#define N = 100
+#define N 100
 
 int main(int argc, char *argv[]) {
     int i;
@@ -56,10 +56,10 @@ int main(int argc, char *argv[]) {
 
 
     // validação dos processos
-    if (total_processos != NUM_PROCESSOS_REQUERIDOS) {
-        if (meu_rank == 0) {
-            fprintf("ERRO: Este código foi projetado para rodar com numero exato de processo");
-            fprintf("Execute usando: mpirun -np %d ./programa\n", NUM_PROCESSOS_REQUERIDOS);
+    if (total_processos != processadores_num) {
+        if (rank == 0) {
+            printf("ERRO: Este código foi projetado para rodar com numero exato de processo");
+            printf("Execute usando: mpirun -np %d ./programa\n", processadores_num);
         }
         MPI_Finalize();
         exit(EXIT_FAILURE);
@@ -93,15 +93,15 @@ int main(int argc, char *argv[]) {
 
     // Apenas o processo root (0) imprime o vetor final
     if (rank == 0) {
-        printf("\n[Processo %d] Vetor original: %d\n", rank, data);
-        printf("[Processo %d] Vetor transformado: %d\n", rank, resultado);
+        printf("\n[Processo %d] Vetor original: %p\n", rank, data);
+        printf("[Processo %d] Vetor transformado: %p\n", rank, resultado);
 
         free(data);
     }
    
     // Libera a memória do vetor local
     free(local_data);
-    free(resultado;)
+    free(resultado);
 
     // Finaliza o ambiente MPI
     MPI_Finalize();
