@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
     // Obtém o número total de processos em execução
     MPI_Comm_size(MPI_COMM_WORLD, &total_processos);
 
-
+    resultado = (int *)malloc(N * sizeof(int));
     // validação dos processos
     if (total_processos != processadores_num) {
         if (rank == 0) {
@@ -89,18 +89,29 @@ int main(int argc, char *argv[]) {
     }
 
     // Gather para reunior os vetores no processo mestre
-    MPI_Gather(&local_data, 1, MPI_INT, resultado, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Gather(local_data, chunk_tam, MPI_INT, resultado, chunk_tam, MPI_INT, 0, MPI_COMM_WORLD);
 
     // Apenas o processo root (0) imprime o vetor final
     if (rank == 0) {
-        printf("\n[Processo %d] Vetor original: %d\n", rank, *data);
-        printf("[Processo %d] Vetor transformado: %d\n", rank, *resultado);
+        printf("Processo %d] Vetor original: ", rank);
+        for (i = 0; i < N; i++) {
+            printf(" %d", data[i]);
+        }
+        printf("\n");
+        printf("\n");
+        printf("[Processo %d] Vetor transformado:", rank);
+        for (i = 0; i < N; i++) {
+            printf(" %d", resultado[i]);
+        }
+        printf("\n");
+        //printf("\n[Processo %d] Vetor original: %d\n", rank, *data);
+        //printf("[Processo %d] Vetor transformado: %d\n", rank, *resultado);
         free(data);
+        free(resultado);
     }
    
     // Libera a memória do vetor local
     free(local_data);
-    free(resultado);
 
     // Finaliza o ambiente MPI
     MPI_Finalize();
